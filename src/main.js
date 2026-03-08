@@ -123,7 +123,7 @@ function init(){
   
   console.log(meshes)
 
-  gsapText(2)
+  gsapText(1)
 
   handleScroll()
   instances()

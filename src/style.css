@@ -104,6 +104,7 @@ button:focus-visible {
   top: 7%;
   font-size: 30px;
   font-weight: 500;
+  opacity: 1;
   /* font-family: './miamifont.json'; */
 }
 
@@ -115,6 +116,7 @@ button:focus-visible {
   color: black;
   top: 25%;
   font-size: 25px;
+  opacity: 1;
 }
 
 .third-text{
@@ -125,4 +127,5 @@ button:focus-visible {
   color: black;
   top: 50%;
   font-size: 25px;
+  opacity: 1;
 }
