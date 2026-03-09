@@ -142,6 +142,7 @@ function handleScroll() {
 			-maxVelocity,
 		)
 	})
+  console.log(scrollProgress)
 }
 
 function updateCamera(scrollProgress) {
@@ -226,6 +227,12 @@ function animate(){
   renderer.render(scene, camera);
 
   // console.log(camera.position)
+
+if (scrollProgress<scrollProgress == 2){
+  scrollVelocity = 1
+}
+
+
 }
 
   
