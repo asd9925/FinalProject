@@ -18,17 +18,17 @@ export const addTrack = () => {
 	// Define control points for the track curve
 	// Each point is a 3D vector with (x, y, z) coordinates
 	const points = [
-		new Vector3(320, 200, -170),
-		new Vector3(300, 160, -170),
-        new Vector3(250, 100, -170),
-        new Vector3(200, 60, -170),
-        new Vector3(180, 55, -170),
-		// new Vector3(-300, 0, 0),
-		// new Vector3(-200, -5, 5),
-		// new Vector3(-100, 0, 10),
-		// new Vector3(-50, 5, 14),
-		// new Vector3(-25, 0, 18),
-        // new Vector3(700, 100, 18),
+		new Vector3(320, 200, -170), //into
+		new Vector3(300, 160, -170), //intro-2000
+        new Vector3(275, 130, -170), //2000-2010
+        new Vector3(250, 100, -170), //2010-2020
+        new Vector3(225, 80, -170), //2020-2030
+        new Vector3(200, 60, -170), //2030-2040
+        new Vector3(175, 55, -170), //2040-2060
+        new Vector3(150, 50, -170), //2060-2070
+        new Vector3(120, 35, -170), //2070-2100
+        new Vector3(100, 20, -170), //2100-2120
+        new Vector3(80, 10, -170), //year x
 	]
 
 	// Create visual markers (red spheres) for each control point

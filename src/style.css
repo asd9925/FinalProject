@@ -103,7 +103,7 @@ button:focus-visible {
   color: black;
   top: 7%;
   font-size: 30px;
-  font-weight: 500;
+  font-weight: 400;
   opacity: 1;
   /* font-family: './miamifont.json'; */
 }
@@ -114,9 +114,10 @@ button:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  top: 25%;
+  top: 27%;
   font-size: 25px;
   opacity: 1;
+  font-weight: 400;
 }
 
 .third-text{
@@ -125,7 +126,75 @@ button:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  top: 50%;
+  top: 47%;
   font-size: 25px;
   opacity: 1;
+  font-weight: 400;
+}
+
+* {
+  overflow: hidden;
+}
+
+.begin-text{
+  display: none;
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  top: 82%;
+  font-size: 25px;
+  opacity: 1;
+  font-weight: 500;
+}
+/* 
+.fourth-text{
+  display: none;
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  top: 20%;
+  font-size: 25px;
+  opacity: 1;
+  font-weight: 500;
+  /* bottom: 10%; */
+
+
+.year1, .year2, .year3, .year4, .year5, .year6, .year7, .year8, .year9{
+  display: none;
+  position: absolute;
+  left: 10%;
+  color: black;
+  top: 10%;
+  font-size: 25px;
+  opacity: 1;
+  font-weight: 500;
+}
+
+.level1, .level2, .level3, .level4, .level5, .level6, .level7, .level8, .level9{
+  display: none;
+  position: absolute;
+  right: 10%;
+  color: black;
+  top: 10%;
+  font-size: 25px;
+  opacity: 1;
+  font-weight: 500;
+}
+
+.fourth-text, .fifth-text, .sixth-text, .seventh-text, .eighth-text, .ninth-text, .tenth-text, .eleventh-text, .twelfth-text{
+  display: none;
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  top: 20%;
+  /* bottom: 10%; */
+  font-size: 25px;
+  opacity: 1;
+  font-weight: 500;
 }
