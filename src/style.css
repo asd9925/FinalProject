@@ -107,12 +107,13 @@ button:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  top: 7%;
-  font-size: 30px;
+  /* top: 7%; */
+  top: 25%;
+  font-size: 32px;
   font-weight: 400;
   opacity: 1;
   z-index: 2;
-  /* font-family: './miamifont.json'; */
+  font-family: Arial, Helvetica, sans-serif
 }
 
 .second-text{
@@ -121,7 +122,8 @@ button:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  top: 27%;
+  /* top: 27%; */
+  top: 35%;
   font-size: 25px;
   opacity: 1;
   font-weight: 400;
@@ -134,7 +136,8 @@ button:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  top: 47%;
+  /* top: 47%; */
+  top: 51%;
   font-size: 25px;
   opacity: 1;
   font-weight: 400;
@@ -145,7 +148,21 @@ button:focus-visible {
   overflow: hidden;
 }
 
-.begin-text, .click-text{
+.begin-text{
+  display: none;
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  top: 86%;
+  font-size: 25px;
+  opacity: 1;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.click-text{
   display: none;
   position: absolute;
   text-align: center;
@@ -226,6 +243,11 @@ button:focus-visible {
   z-index: 2;
 }
 
+@font-face {
+  font-family: 'MiamiVice';
+  src: url('/miamivice.ttf');
+}
+
 .outro-text{
   display: none;
   position: absolute;
@@ -238,6 +260,7 @@ button:focus-visible {
   opacity: 1;
   font-weight: 500;
   z-index: 2;
+  font-family: 'MiamiVice', sans-serif;
 }
 
 .water-overlay {
@@ -251,4 +274,26 @@ button:focus-visible {
   opacity: 0;
   pointer-events: none;
   z-index: 1;
+}
+
+.sources{
+  display: none;
+  position: absolute;
+  width: 27.5em;
+  color: black;
+  top: 51%;
+  font-size: 20px;
+  opacity: 1;
+  font-weight: 200;
+  z-index: 2;
+}
+
+.sources h5{
+  margin-bottom: 1em;
+  padding-left: 10%
+}
+
+.sources ul{
+  padding-left: 10%;
+  white-space: nowrap;
 }

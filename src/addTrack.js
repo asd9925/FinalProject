@@ -12,7 +12,6 @@ import {
 } from 'three'
 
 export const addTrack = () => {
-	// Create a group to hold all debug points
 	const group = new Group()
 
 	// Define control points for the track curve

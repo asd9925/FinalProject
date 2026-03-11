@@ -9,6 +9,8 @@ import gsap from 'gsap'
 import { gsapText } from './gsapText'
 import { Water } from 'three/addons/objects/Water.js'
 import { reflect } from 'three/tsl'
+import { Water as Water2 } from 'three/addons/objects/Water2.js'
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 
 //calling three library with our own variable scene
 const scene = new THREE.Scene()
@@ -111,6 +113,9 @@ audioLoader.load( 'shepard-tone.mp3', function( buffer ) {
 	sound.setVolume( 0.35 );
 });
 
+//font loader
+const loader = new FontLoader();
+const font = await loader.loadAsync('miamiVice.json');
 
 init()
 //all setup stuff goes here
@@ -144,7 +149,45 @@ function init() {
 	// Create the water geometry
 	const waterGeometry = new THREE.PlaneGeometry(10000, 10000)
 
-	// Create the water object
+//   const waterNormals0 = new THREE.TextureLoader().load('waternormals.jpg')
+//   const waterNormals1 = new THREE.TextureLoader().load('waternormals.jpg')
+//   waterNormals0.wrapS = waterNormals0.wrapT = THREE.RepeatWrapping
+//   waterNormals1.wrapS = waterNormals1.wrapT = THREE.RepeatWrapping
+//   waterNormals0.repeat.set(6,6)
+//   waterNormals1.repeat.set(10,10)
+//   waterNormals1.center.set(0.5,0.5)
+//   waterNormals1.rotation = Math.PI / 4
+
+//   water = new Water2(waterGeometry, {
+//     textureWidth: 1024,
+//     textureHeight: 1024,
+//     // color: '#4B93C3',
+//     // color: '#34BDEB',
+//     color: '#c4d7f5',
+//     reflectivity: 0.0,
+//     flowSpeed: 0.02,
+//     flowDirection: new THREE.Vector2(1, 0.25),
+//     scale: 8,
+//     normalMap0: waterNormals0,
+//     normalMap1: waterNormals1,
+//   //   sunDirection: new THREE.Vector3(0, 0, 0),
+// 	//  sunColor: 0xffffff,
+//   })
+
+//   water.material.uniforms['color'].value = new THREE.Color('#c4d7f5')
+
+//   water.rotation.x = -Math.PI/2
+//   water.position.x = 0
+//   water.position.y = -11
+//   water.material.side = THREE.DoubleSide
+//   water.material.opacity = 0.8
+//   water.material.polygonOffset = true
+//   water.material.polygonOffsetFactor = 1
+//   water.material.polygonOffsetUnitys = 1
+//   water.renderOrder = -1
+//   scene.add(water)
+
+	//Create the water object
 	water = new Water(waterGeometry, {
 		textureWidth: 500,
 		textureHeight: 500,
@@ -161,7 +204,8 @@ function init() {
 		sunColor: 0xffffff,
 		side: THREE.DoubleSide,
 		// waterColor: 0x34bdeb,
-		waterColor: 0x34bdeb,
+    waterColor: 0x00D3E2,
+    // waterColor: 0x1D96CD,
 		distortionScale: 0.1,
 		alpha: 0.01,
 	})
@@ -233,6 +277,7 @@ function outroAnimation(){
   window.addEventListener('click', (event)=> {
     //dont go through with interaction too early
     if (!canClick) return
+    canClick = false
 
     //get current progress on track
     const outroState = { progress: targetProgress }
@@ -262,7 +307,7 @@ function outroAnimation(){
     //MAKE CAMERA MOVE BACKWARDS
     gsap.to(outroState, {
 		progress: introEndProgress,
-		duration: 25,
+		duration: 45,
 		ease: 'none',
 		onUpdate: () => {
 			targetProgress = outroState.progress
@@ -275,7 +320,7 @@ function outroAnimation(){
       duration: 0.7,
       ease: 'power2.in',
     })
-      gsap.set('.outro-text', {
+      gsap.set(['.outro-text'], {
         display: 'block',
         delay: 1,
         duration: 1,
@@ -286,6 +331,21 @@ function outroAnimation(){
       opacity: 1,
       duration: 1,
       delay: 1,
+      ease: 'power2.out',
+    })
+
+    //wait a sec before sources come
+    gsap.set(['.sources'], {
+        display: 'block',
+        delay: 2,
+        duration: 1,
+  })
+      gsap.fromTo(['.sources'], {
+      opacity: 0
+    }, {
+      opacity: 1,
+      duration: 1,
+      delay: 2,
       ease: 'power2.out',
     })
   }
@@ -636,6 +696,9 @@ function animate() {
 		interactions9()
 		animateWaterPosition(30)
 	}
+  
+  //move water
+  water.material.uniforms['time'].value += 0.5 / 60.0
 
 	//tell renderer to render whats in arguments (current scene and camera)
 	renderer.render(scene, camera)
