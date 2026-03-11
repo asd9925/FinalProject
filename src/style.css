@@ -30,6 +30,12 @@ body {
   min-height: 100vh;
 }
 
+canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -105,6 +111,7 @@ button:focus-visible {
   font-size: 30px;
   font-weight: 400;
   opacity: 1;
+  z-index: 2;
   /* font-family: './miamifont.json'; */
 }
 
@@ -118,6 +125,7 @@ button:focus-visible {
   font-size: 25px;
   opacity: 1;
   font-weight: 400;
+  z-index: 2;
 }
 
 .third-text{
@@ -130,59 +138,49 @@ button:focus-visible {
   font-size: 25px;
   opacity: 1;
   font-weight: 400;
+  z-index: 2;
 }
 
 * {
   overflow: hidden;
 }
 
-.begin-text{
+.begin-text, .click-text{
   display: none;
   position: absolute;
   text-align: center;
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  top: 82%;
+  top: 85%;
   font-size: 25px;
   opacity: 1;
   font-weight: 500;
+  z-index: 2;
 }
-/* 
-.fourth-text{
-  display: none;
-  position: absolute;
-  text-align: center;
-  left: 50%;
-  transform: translateX(-50%);
-  color: black;
-  top: 20%;
-  font-size: 25px;
-  opacity: 1;
-  font-weight: 500;
-  /* bottom: 10%; */
-
 
 .year1, .year2, .year3, .year4, .year5, .year6, .year7, .year8, .year9{
-  display: none;
+  display: block;
   position: absolute;
   left: 10%;
   color: black;
   top: 10%;
   font-size: 25px;
-  opacity: 1;
+  opacity: 0;
   font-weight: 500;
+  z-index: 2;
 }
 
 .level1, .level2, .level3, .level4, .level5, .level6, .level7, .level8, .level9{
-  display: none;
+  display: block;
   position: absolute;
   right: 10%;
   color: black;
   top: 10%;
   font-size: 25px;
-  opacity: 1;
+  opacity: 0;
   font-weight: 500;
+  z-index: 2;
 }
 
 .fourth-text, .fifth-text, .sixth-text, .seventh-text, .eighth-text, .ninth-text, .tenth-text, .eleventh-text, .twelfth-text{
@@ -192,9 +190,65 @@ button:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  top: 20%;
+  top: 15%;
   /* bottom: 10%; */
   font-size: 25px;
   opacity: 1;
   font-weight: 500;
+  z-index: 2;
+}
+
+.final-text{
+  display: none;
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  top: 15%;
+  font-size: 25px;
+  opacity: 1;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.final-text2{
+  display: none;
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  top: 27%;
+  font-size: 25px;
+  opacity: 1;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.outro-text{
+  display: none;
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  top: 30%;
+  font-size: 100px;
+  opacity: 1;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.water-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(38, 113, 189, 0.75),
+    rgba(18, 77, 148, 0.9)
+  );
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
 }

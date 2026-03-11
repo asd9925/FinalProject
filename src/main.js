@@ -7,7 +7,7 @@ import { environment } from './environment'
 import { addTrack } from './addTrack'
 import gsap from 'gsap'
 import { gsapText } from './gsapText'
-import { Water } from 'three/addons/objects/Water.js';
+import { Water } from 'three/addons/objects/Water.js'
 import { reflect } from 'three/tsl'
 
 //calling three library with our own variable scene
@@ -53,45 +53,64 @@ const acceleration = 0.000007
 const maxVelocity = 0.5
 const introEndProgress = 0.1384137598564551
 
-const pointTwo = 0.26086905641985725;
+const pointTwo = 0.26086905641985725
 
-const pointThree = 0.3834024169985245;
+const pointThree = 0.3834024169985245
 
-const pointFour = 0.48383017674646234;
+const pointFour = 0.48383017674646234
 
-const pointFive = 0.5842777965364307;
+const pointFive = 0.5842777965364307
 
-const pointSix = 0.6644891644168056;
+const pointSix = 0.6644891644168056
 
-const pointSeven = 0.7444219619946211;
+const pointSeven = 0.7444219619946211
 
-const pointEight = 0.8496676715797598;
+const pointEight = 0.8496676715797598
 
-const pointNine = 0.928067373269962;
+const pointNine = 0.928067373269962
 
 let isIntroPlaying = true
 
-let scrollingStarted = false;
+let scrollingStarted = false
 
-let scrolling2Started = false;
+let scrolling2Started = false
 
-let scrolling3Started = false;
+let scrolling3Started = false
 
-let scrolling4Started = false;
+let scrolling4Started = false
 
-let scrolling5Started = false;
+let scrolling5Started = false
 
-let scrolling6Started = false;
+let scrolling6Started = false
 
-let scrolling7Started = false;
+let scrolling7Started = false
 
-let scrolling8Started = false;
+let scrolling8Started = false
 
-let scrolling9Started = false;
+let scrolling9Started = false
 
 const clock = new THREE.Clock()
 
-let water;
+let water
+let waterOverlay
+let waterOverlayOpacity = 0
+
+//make it so click interaction only works at the very end
+let canClick = false;
+
+// create an AudioListener and add it to the camera
+const listener = new THREE.AudioListener();
+camera.add( listener );
+// create a global audio source
+const sound = new THREE.Audio( listener );
+// load a sound and set it as the Audio object's buffer
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load( 'shepard-tone.mp3', function( buffer ) {
+	sound.setBuffer( buffer );
+	sound.setLoop( true );
+	sound.setVolume( 0.35 );
+});
+
 
 init()
 //all setup stuff goes here
@@ -100,13 +119,14 @@ function init() {
 	renderer.setSize(window.innerWidth, window.innerHeight)
 	//created screen caputre, drew image, so put it on the screen
 	document.body.appendChild(renderer.domElement)
+	waterOverlay = document.querySelector('.water-overlay')
 
 	//by defalt everything is at 0,0,0 so move your camera back by 5
 	camera.position.z = 5
 
 	meshes.track = addTrack().track
 	meshes.debug = addTrack().debug
-  //hide visual track and dots
+	//hide visual track and dots
 	// scene.add(meshes.track)
 	// scene.add(meshes.debug)
 
@@ -119,33 +139,33 @@ function init() {
 	//allow flowers to use background to light scene
 	scene.environment = environment()
 	//lower or raise light intensity
-	scene.environmentIntensity = 0.9
+	scene.environmentIntensity = 0.8
 
-   // Create the water geometry
-    const waterGeometry = new THREE.PlaneGeometry(10000, 10000);
+	// Create the water geometry
+	const waterGeometry = new THREE.PlaneGeometry(10000, 10000)
 
-    // Create the water object
-    water = new Water(
-      waterGeometry,
-      {
-        textureWidth: 500,
-        textureHeight: 500,
-        waterNormals: new THREE.TextureLoader().load('waternormals.jpg', function (texture) {
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        water.rotation.x = -Math.PI / 2 //make it flat
-        water.position.x = 0
-        water.position.y = -11
-        }),
-        sunDirection: new THREE.Vector3(0,0,0),
-        sunColor: 0xffffff,
-        // waterColor: 0x34bdeb,
-        waterColor: 0x34bdeb,
-        distortionScale: 0.1,
-        alpha: 0.8,
-        // reflect: 0,
-                }
-            );
-            scene.add(water)
+	// Create the water object
+	water = new Water(waterGeometry, {
+		textureWidth: 500,
+		textureHeight: 500,
+		waterNormals: new THREE.TextureLoader().load(
+			'waternormals.jpg',
+			function (texture) {
+				texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+				water.rotation.x = -Math.PI / 2 //make it flat
+				water.position.x = 0
+				water.position.y = -11
+			},
+		),
+		sunDirection: new THREE.Vector3(0, 0, 0),
+		sunColor: 0xffffff,
+		side: THREE.DoubleSide,
+		// waterColor: 0x34bdeb,
+		waterColor: 0x34bdeb,
+		distortionScale: 0.1,
+		alpha: 0.01,
+	})
+	scene.add(water)
 
 	gsapText(1)
 	playIntro()
@@ -154,6 +174,7 @@ function init() {
 	instances()
 	resize()
 	animate()
+  outroAnimation()
 }
 
 function handleScroll() {
@@ -190,8 +211,6 @@ function playIntro() {
 	gsap.to(introState, {
 		progress: introEndProgress,
 		duration: 5,
-    //CHANGE BACK TO 9
-    // duration: 1,
 		ease: 'power2.out',
 		onUpdate: () => {
 			targetProgress = introState.progress
@@ -202,221 +221,322 @@ function playIntro() {
 			scrollVelocity = 0
 			isIntroPlaying = false
 
-      //display instructions/begin text
-      document.querySelector('.begin-text').style.display = 'block'
-      
+			//display instructions/begin text
+			document.querySelector('.begin-text').style.display = 'block'
 		},
 	})
 }
 
-//scroll between points here 
-function interactions(){
-  //old intro text goes up page when you begin scrolling
-  gsap.to(['.first-text', '.second-text', '.third-text', '.begin-text'],{
-    y: -window.innerHeight,
-    duration: 2,
-  })
-  //make new text appear from bottom
-  document.querySelector('.fourth-text').style.display = 'block'
-  gsap.fromTo('.fourth-text',{
-    y: window.innerHeight
+function outroAnimation(){
+
+  //on click remove previous text
+  window.addEventListener('click', (event)=> {
+    //dont go through with interaction too early
+    if (!canClick) return
+
+    //get current progress on track
+    const outroState = { progress: targetProgress }
+
+    //after click fade final data text away, and new text fades in
+    gsap.to(['.click-text', '.twelfth-text', '.year9', '.level9'], {
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power2.in',
+    })
+
+    gsap.set(['.final-text', '.final-text2'], {
+      display: 'block',
+      delay: 0.8,
+      duration: 1,
+    })
+
+    gsap.fromTo(['.final-text', '.final-text2'], {
+      opacity: 0
     }, {
-    y: window.innerHeight/2,
-    duration: 2,
+      opacity: 1,
+      duration: 1,
+      delay: 0.8,
+      ease: 'power2.out',
     })
 
-//make year and level appear after animation
-gsap.set(['.level1', '.year1'], {
-  display: 'block',
-  delay: 1.8,
-})
-}
+    //MAKE CAMERA MOVE BACKWARDS
+    gsap.to(outroState, {
+		progress: introEndProgress,
+		duration: 25,
+		ease: 'none',
+		onUpdate: () => {
+			targetProgress = outroState.progress
+		},
 
-function interactions2(){
-  gsap.to('.fourth-text', {
-    y: -window.innerHeight,
-    duration: 2,
+    //remove final text and fade in outro text
+    onComplete: () => {
+      gsap.to(['.final-text', '.final-text2'], {
+      opacity: 0,
+      duration: 0.7,
+      ease: 'power2.in',
+    })
+      gsap.set('.outro-text', {
+        display: 'block',
+        delay: 1,
+        duration: 1,
   })
-  document.querySelector('.fifth-text').style.display = 'block'
-  gsap.fromTo('.fifth-text', {
-    y: window.innerHeight},{
-      y: window.innerHeight/2,
-      duration: 2,
+      gsap.fromTo(['.outro-text'], {
+      opacity: 0
+    }, {
+      opacity: 1,
+      duration: 1,
+      delay: 1,
+      ease: 'power2.out',
     })
-
-   gsap.set(['.level1', '.year1'], {
-    display: 'none',
-    delay: 0,
+  }
 })
-
-  gsap.set(['.level2', '.year2'], {
-  display: 'block',
-  delay: 1.8,
-})
-}
-
-function interactions3(){
-  gsap.to('.fifth-text', {
-    y: -window.innerHeight,
-    duration: 2,
   })
-  document.querySelector('.sixth-text').style.display = 'block'
-  gsap.fromTo('.sixth-text', {
-    y: window.innerHeight},{
-      y: window.innerHeight/2,
-      duration: 2,
-    })
+  }
 
-   gsap.set(['.level2', '.year2'], {
-    display: 'none',
-    delay: 0,
-})
+function animateLevelText(activeLevel) {
+	const allLevelText = Array.from({ length: 9 }, (_, index) => [
+		`.level${index + 1}`,
+		`.year${index + 1}`,
+	]).flat()
+	const currentLevelText = [`.level${activeLevel}`, `.year${activeLevel}`]
+	const inactiveLevelText = allLevelText.filter(
+		(selector) => !currentLevelText.includes(selector),
+	)
 
-  gsap.set(['.level3', '.year3'], {
-  display: 'block',
-  delay: 1.8,
-})
+	gsap.killTweensOf(allLevelText)
+
+	gsap.to(inactiveLevelText, {
+		opacity: 0,
+		duration: 0.4,
+		overwrite: 'auto',
+	})
+
+	gsap.set(currentLevelText, {
+		opacity: 0,
+	})
+
+	gsap.to(currentLevelText, {
+		opacity: 1,
+		duration: 0.8,
+		delay: 1.8,
+		overwrite: 'auto',
+	})
 }
 
-function interactions4 () {
+function animateWaterPosition(y) {
+	if (!water) return
 
-  gsap.to('.sixth-text', {
-    y: -window.innerHeight,
-    duration: 2,
+	gsap.to(water.position, {
+		y,
+		duration: 1.5,
+		ease: 'power2.out',
+		overwrite: 'auto',
+	})
+}
+
+function updateWaterOverlay() {
+	if (!water || !waterOverlay) return
+
+	const underwaterDepth = water.position.y - camera.position.y - 0.5
+	const targetOpacity = THREE.MathUtils.clamp(underwaterDepth * 0.12, 0, 0.45)
+
+	waterOverlayOpacity = THREE.MathUtils.lerp(
+		waterOverlayOpacity,
+		targetOpacity,
+		0.08,
+	)
+	waterOverlay.style.opacity = waterOverlayOpacity.toFixed(3)
+}
+
+//scroll between points here
+function interactions() {
+	//old intro text goes up page when you begin scrolling
+	gsap.to(['.first-text', '.second-text', '.third-text', '.begin-text'], {
+		y: -window.innerHeight,
+		duration: 2,
+	})
+	//make new text appear from bottom
+	document.querySelector('.fourth-text').style.display = 'block'
+	gsap.fromTo(
+		'.fourth-text',
+		{
+			y: window.innerHeight,
+		},
+		{
+			y: window.innerHeight / 2,
+			duration: 2,
+		},
+	)
+
+	//make year and level appear after animation
+	animateLevelText(1)
+}
+
+function interactions2() {
+	gsap.to('.fourth-text', {
+		y: -window.innerHeight,
+		duration: 2,
+	})
+	document.querySelector('.fifth-text').style.display = 'block'
+	gsap.fromTo(
+		'.fifth-text',
+		{
+			y: window.innerHeight,
+		},
+		{
+			y: window.innerHeight / 2,
+			duration: 2,
+		},
+	)
+
+	animateLevelText(2)
+}
+
+function interactions3() {
+	gsap.to('.fifth-text', {
+		y: -window.innerHeight,
+		duration: 2,
+	})
+	document.querySelector('.sixth-text').style.display = 'block'
+	gsap.fromTo(
+		'.sixth-text',
+		{
+			y: window.innerHeight,
+		},
+		{
+			y: window.innerHeight / 2,
+			duration: 2,
+		},
+	)
+
+	animateLevelText(3)
+}
+
+function interactions4() {
+	gsap.to('.sixth-text', {
+		y: -window.innerHeight,
+		duration: 2,
+	})
+	document.querySelector('.seventh-text').style.display = 'block'
+	gsap.fromTo(
+		'.seventh-text',
+		{
+			y: window.innerHeight,
+		},
+		{
+			y: window.innerHeight / 2,
+			duration: 2,
+		},
+	)
+
+	animateLevelText(4)
+}
+
+function interactions5() {
+	gsap.to('.seventh-text', {
+		y: -window.innerHeight,
+		duration: 2,
+	})
+	document.querySelector('.eighth-text').style.display = 'block'
+	gsap.fromTo(
+		'.eighth-text',
+		{
+			y: window.innerHeight,
+		},
+		{
+			y: window.innerHeight / 2,
+			duration: 2,
+		},
+	)
+
+	animateLevelText(5)
+}
+
+function interactions6() {
+	gsap.to('.eighth-text', {
+		y: -window.innerHeight,
+		duration: 2,
+	})
+	document.querySelector('.ninth-text').style.display = 'block'
+	gsap.fromTo(
+		'.ninth-text',
+		{
+			y: window.innerHeight,
+		},
+		{
+			y: window.innerHeight / 2,
+			duration: 2,
+		},
+	)
+
+	animateLevelText(6)
+}
+
+function interactions7() {
+	gsap.to('.ninth-text', {
+		y: -window.innerHeight,
+		duration: 2,
+	})
+	document.querySelector('.tenth-text').style.display = 'block'
+	gsap.fromTo(
+		'.tenth-text',
+		{
+			y: window.innerHeight,
+		},
+		{
+			y: window.innerHeight / 2,
+			duration: 2,
+		},
+	)
+
+	animateLevelText(7)
+}
+
+function interactions8() {
+	gsap.to('.tenth-text', {
+		y: -window.innerHeight,
+		duration: 2,
+	})
+	document.querySelector('.eleventh-text').style.display = 'block'
+	gsap.fromTo(
+		'.eleventh-text',
+		{
+			y: window.innerHeight,
+		},
+		{
+			y: window.innerHeight / 2,
+			duration: 2,
+		},
+	)
+
+	animateLevelText(8)
+}
+
+function interactions9() {
+	gsap.to('.eleventh-text', {
+		y: -window.innerHeight,
+		duration: 2,
+	})
+	document.querySelector('.twelfth-text').style.display = 'block'
+	gsap.fromTo(
+		'.twelfth-text',
+		{
+			y: window.innerHeight,
+		},
+		{
+			y: window.innerHeight / 2,
+			duration: 2,
+		},
+	)
+
+	animateLevelText(9)
+
+  gsap.set('.click-text', {
+    display: 'block',
+    delay: 2,
   })
-  document.querySelector('.seventh-text').style.display = 'block'
-  gsap.fromTo('.seventh-text', {
-    y: window.innerHeight},{
-      y: window.innerHeight/2,
-      duration: 2,
-    })
-
-   gsap.set(['.level3', '.year3'], {
-    display: 'none',
-    delay: 0,
-})
-
-  gsap.set(['.level4', '.year4'], {
-  display: 'block',
-  delay: 1.8,
-})
+  canClick = true;
 }
-
-function interactions5(){
-  gsap.to('.seventh-text', {
-    y: -window.innerHeight,
-    duration: 2,
-  })
-  document.querySelector('.eighth-text').style.display = 'block'
-  gsap.fromTo('.eighth-text', {
-    y: window.innerHeight},{
-      y: window.innerHeight/2,
-      duration: 2,
-    })
-
-   gsap.set(['.level4', '.year4'], {
-    display: 'none',
-    delay: 0,
-})
-
-  gsap.set(['.level5', '.year5'], {
-  display: 'block',
-  delay: 1.8,
-})
-}
-
-function interactions6(){
-  gsap.to('.eighth-text', {
-    y: -window.innerHeight,
-    duration: 2,
-  })
-  document.querySelector('.ninth-text').style.display = 'block'
-  gsap.fromTo('.ninth-text', {
-    y: window.innerHeight},{
-      y: window.innerHeight/2,
-      duration: 2,
-    })
-
-   gsap.set(['.level5', '.year5'], {
-    display: 'none',
-    delay: 0,
-})
-
-  gsap.set(['.level6', '.year6'], {
-  display: 'block',
-  delay: 1.8,
-})
-}
-
-function interactions7(){
-  gsap.to('.ninth-text', {
-    y: -window.innerHeight,
-    duration: 2,
-  })
-  document.querySelector('.tenth-text').style.display = 'block'
-  gsap.fromTo('.tenth-text', {
-    y: window.innerHeight},{
-      y: window.innerHeight/2,
-      duration: 2,
-    })
-
-   gsap.set(['.level6', '.year6'], {
-    display: 'none',
-    delay: 0,
-})
-
-  gsap.set(['.level7', '.year7'], {
-  display: 'block',
-  delay: 1.8,
-})
-}
-
-function interactions8(){
-  gsap.to('.tenth-text', {
-    y: -window.innerHeight,
-    duration: 2,
-  })
-  document.querySelector('.eleventh-text').style.display = 'block'
-  gsap.fromTo('.eleventh-text', {
-    y: window.innerHeight},{
-      y: window.innerHeight/2,
-      duration: 2,
-    })
-
-   gsap.set(['.level7', '.year7'], {
-    display: 'none',
-    delay: 0,
-})
-
-  gsap.set(['.level8', '.year8'], {
-  display: 'block',
-  delay: 1.8,
-})
-}
-
-function interactions9(){
-  gsap.to('.eleventh-text', {
-    y: -window.innerHeight,
-    duration: 2,
-  })
-  document.querySelector('.twelfth-text').style.display = 'block'
-  gsap.fromTo('.twelfth-text', {
-    y: window.innerHeight},{
-      y: window.innerHeight/2,
-      duration: 2,
-    })
-
-   gsap.set(['.level8', '.year8'], {
-    display: 'none',
-    delay: 0,
-})
-
-  gsap.set(['.level9', '.year9'], {
-  display: 'block',
-  delay: 1.8,
-})
-}
-
 
 function instances() {
 	const miami = new Model({
@@ -428,7 +548,6 @@ function instances() {
 		// emissive: 1.5,
 	})
 	miami.init()
-
 }
 
 function resize() {
@@ -460,65 +579,64 @@ function animate() {
 	// Smoothly move toward target position
 	scrollProgress += (targetProgress - scrollProgress) * 0.1
 	updateCamera(scrollProgress)
+	updateWaterOverlay()
 
-  //start scrolling animations with interactions()
-  if (targetProgress > introEndProgress + 0.001 && !scrollingStarted){
-    scrollingStarted = true
-    interactions()
-  }
+	//start scrolling animations with interactions()
+	if (targetProgress > introEndProgress + 0.001 && !scrollingStarted) {
+		scrollingStarted = true
+		interactions()
+    sound.play();
+	}
 
-  //start second scroll interaction
-  if (targetProgress > pointTwo && !scrolling2Started){
-    scrolling2Started = true;
-    water.position.y = -10.4
-    interactions2()
-  }
+	//start second scroll interaction
+	if (targetProgress > pointTwo && !scrolling2Started) {
+		scrolling2Started = true
+		animateWaterPosition(-10.4)
+		interactions2()
+	}
 
-  if (targetProgress > pointThree && !scrolling3Started){
-    scrolling3Started = true;
-    water.position.y = -10
-    interactions3()
-  }
+	if (targetProgress > pointThree && !scrolling3Started) {
+		scrolling3Started = true
+		animateWaterPosition(-10)
+		interactions3()
+	}
 
-  if (targetProgress > pointFour && !scrolling4Started){
-    scrolling4Started = true;
-    water.position.y = -9.4
-    interactions4()
-  }
+	if (targetProgress > pointFour && !scrolling4Started) {
+		scrolling4Started = true
+		animateWaterPosition(-9.4)
+		interactions4()
+	}
 
-  if (targetProgress > pointFive && !scrolling5Started){
-    scrolling5Started = true;
-    interactions5()
-    water.position.y = -7
-  }
+	if (targetProgress > pointFive && !scrolling5Started) {
+		scrolling5Started = true
+		interactions5()
+		animateWaterPosition(-7)
+	}
 
-  if (targetProgress > pointSix && !scrolling6Started){
-    scrolling6Started = true;
-    interactions6()
-    water.position.y = 0
-  }
+	if (targetProgress > pointSix && !scrolling6Started) {
+		scrolling6Started = true
+		interactions6()
+		animateWaterPosition(0)
+	}
 
-  if (targetProgress > pointSeven && !scrolling7Started){
-    scrolling7Started = true;
-    interactions7()
-    water.position.y = 5
-  }
+	if (targetProgress > pointSeven && !scrolling7Started) {
+		scrolling7Started = true
+		interactions7()
+		animateWaterPosition(5)
+	}
 
-  if (targetProgress > pointEight && !scrolling8Started){
-    scrolling8Started = true;
-    interactions8()
-    water.position.y = 10
-  }
+	if (targetProgress > pointEight && !scrolling8Started) {
+		scrolling8Started = true
+		interactions8()
+		animateWaterPosition(10)
+	}
 
-  if (targetProgress > pointNine && !scrolling9Started){
-    scrolling9Started = true;
-    interactions9()
-    water.position.y = 30
-  }
+	if (targetProgress > pointNine && !scrolling9Started) {
+		scrolling9Started = true
+		interactions9()
+		animateWaterPosition(30)
+	}
 
 	//tell renderer to render whats in arguments (current scene and camera)
 	renderer.render(scene, camera)
-
-  console.log(scrollProgress)
 }
-  
