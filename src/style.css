@@ -101,13 +101,12 @@ button:focus-visible {
   }
 }
 
-.first-text{
+/* .first-text{
   position: absolute;
   text-align: center;
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  /* top: 7%; */
   top: 25%;
   font-size: 32px;
   font-weight: 400;
@@ -122,8 +121,7 @@ button:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  /* top: 27%; */
-  top: 35%;
+  top: 34%;
   font-size: 25px;
   opacity: 1;
   font-weight: 400;
@@ -136,13 +134,45 @@ button:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  /* top: 47%; */
-  top: 51%;
+  top: 50%;
   font-size: 25px;
   opacity: 1;
   font-weight: 400;
   z-index: 2;
+} */
+
+.intro-container {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  /* gap: clamp(0.75rem, 2vh, 1.5rem); */
+  gap: clamp(1rem, 3vh, 2rem);
+  width: min(90vw, 800px);
+  z-index: 2;
+  text-align: center;
 }
+
+.intro-container p {
+  margin: 0;
+  color: black;
+}
+
+.first-text {
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  font-weight: 400;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.second-text,
+.third-text {
+  font-size: clamp(0.9rem, 2.6vw, 1.4rem);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
 
 * {
   overflow: hidden;
@@ -155,8 +185,9 @@ button:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  top: 86%;
-  font-size: 25px;
+  top: 89%;
+  /* font-size: 25px; */
+  font-size: clamp(1rem, 3vw, 1.5rem);
   opacity: 1;
   font-weight: 500;
   z-index: 2;
@@ -170,7 +201,8 @@ button:focus-visible {
   transform: translateX(-50%);
   color: black;
   top: 85%;
-  font-size: 25px;
+  /* font-size: 25px; */
+  font-size: clamp(1rem, 3vw, 1.5rem);
   opacity: 1;
   font-weight: 500;
   z-index: 2;
@@ -208,14 +240,44 @@ button:focus-visible {
   transform: translateX(-50%);
   color: black;
   top: 15%;
-  /* bottom: 10%; */
-  font-size: 25px;
+  /* font-size: 25px; */
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  width: min(85vw, 700px);
   opacity: 1;
   font-weight: 500;
   z-index: 2;
 }
 
-.final-text{
+.final-container {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  flex-direction: column;
+  gap: clamp(2rem, 6vh, 4rem);
+  width: min(90vw, 800px);
+  z-index: 2;
+  text-align: center;
+}
+
+.final-container p {
+  margin: 0;
+  color: black;
+}
+
+.final-text {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  font-weight: 500;
+}
+
+.final-text2 {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* .final-text{
   display: none;
   position: absolute;
   text-align: center;
@@ -241,7 +303,7 @@ button:focus-visible {
   opacity: 1;
   font-weight: 500;
   z-index: 2;
-}
+} */
 
 @font-face {
   font-family: 'MiamiVice';
@@ -256,7 +318,8 @@ button:focus-visible {
   transform: translateX(-50%);
   color: black;
   top: 30%;
-  font-size: 100px;
+  /* font-size: 100px; */
+  font-size: clamp(2.5rem, 12vw, 6rem);
   opacity: 1;
   font-weight: 500;
   z-index: 2;
@@ -282,7 +345,9 @@ button:focus-visible {
   width: 27.5em;
   color: black;
   top: 51%;
-  font-size: 20px;
+  /* font-size: 20px; */
+  width: min(90vw, 27.5em);
+  font-size: clamp(0.8rem, 2vw, 1.1rem);
   opacity: 1;
   font-weight: 200;
   z-index: 2;

@@ -289,13 +289,13 @@ function outroAnimation(){
       ease: 'power2.in',
     })
 
-    gsap.set(['.final-text', '.final-text2'], {
+    gsap.set(['.final-container'], {
       display: 'block',
       delay: 0.8,
       duration: 1,
     })
 
-    gsap.fromTo(['.final-text', '.final-text2'], {
+    gsap.fromTo(['.final-container'], {
       opacity: 0
     }, {
       opacity: 1,
@@ -411,9 +411,14 @@ function updateWaterOverlay() {
 //scroll between points here
 function interactions() {
 	//old intro text goes up page when you begin scrolling
-	gsap.to(['.first-text', '.second-text', '.third-text', '.begin-text'], {
+	gsap.to(['.intro-container', '.begin-text'], {
 		y: -window.innerHeight,
 		duration: 2,
+		onComplete: () => {
+			document
+				.querySelectorAll('.first-text, .second-text, .third-text, .begin-text')
+				.forEach((el) => (el.style.display = 'none'))
+		},
 	})
 	//make new text appear from bottom
 	document.querySelector('.fourth-text').style.display = 'block'
@@ -436,6 +441,9 @@ function interactions2() {
 	gsap.to('.fourth-text', {
 		y: -window.innerHeight,
 		duration: 2,
+		onComplete: () => {
+			document.querySelector('.fourth-text').style.display = 'none'
+		},
 	})
 	document.querySelector('.fifth-text').style.display = 'block'
 	gsap.fromTo(
